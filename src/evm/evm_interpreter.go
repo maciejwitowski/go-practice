@@ -21,11 +21,13 @@ func NewEvmInterpreter(bytecode string) *EvmInterpreter {
 const (
 	OpAdd   byte = 0x01
 	OpPush1 byte = 0x60
+	OpSwap1 byte = 0x90
 )
 
 var Opcodes = map[byte]Opcode{
 	OpAdd:   Add{},
 	OpPush1: Push1{},
+	OpSwap1: Swap1{},
 }
 
 func (ec *EvmInterpreter) execute() error {
@@ -54,7 +56,7 @@ func (ec *EvmInterpreter) execute() error {
 }
 
 func lookupOpcode(hex string) (Opcode, error) {
-	parsed, err := strconv.ParseInt(hex, 16, 8)
+	parsed, err := strconv.ParseInt(hex, 16, 16)
 	if err != nil {
 		return nil, err
 	}

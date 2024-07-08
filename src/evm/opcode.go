@@ -57,3 +57,26 @@ func (p Push1) Execute(ec *EvmInterpreter) error {
 	ec.Stack.Push(IntValue{val: intVal})
 	return nil
 }
+
+type Swap1 struct {
+}
+
+func (swap Swap1) Execute(ec *EvmInterpreter) error {
+	if ec.Stack.Size() < 2 {
+		return errors.New("not enough elements on the stack")
+	}
+
+	a, err := ec.Stack.pop()
+	if err != nil {
+		return err
+	}
+
+	b, err := ec.Stack.pop()
+	if err != nil {
+		return err
+	}
+
+	ec.Stack.Push(a)
+	ec.Stack.Push(b)
+	return nil
+}

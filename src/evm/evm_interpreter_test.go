@@ -44,3 +44,32 @@ func TestReturnsErrorWhenOpcodeIsNotSupported(t *testing.T) {
 		}
 	}
 }
+
+func TestSwap(t *testing.T) {
+	// Push 1 and 2 on Stack
+	bytecode := "0x6001600290"
+
+	interpreter := EvmInterpreter{
+		Stack:        NewStack(0),
+		bytecode:     bytecode,
+		currentIndex: 0,
+	}
+
+	err := interpreter.execute()
+	if err != nil {
+		t.Errorf("unexpected execution error %s", err)
+	}
+
+	// Expect to get 1 then 2 after swap
+	one, _ := interpreter.Stack.pop()
+	two, _ := interpreter.Stack.pop()
+
+	if one.(IntValue).val != 1 {
+		t.Error("Expected 1")
+	}
+
+	if two.(IntValue).val != 2 {
+		t.Error("Expected 2")
+	}
+
+}
