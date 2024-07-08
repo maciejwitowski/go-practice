@@ -1,7 +1,6 @@
 package evm
 
 import (
-	"fmt"
 	"strconv"
 )
 
@@ -63,7 +62,7 @@ func lookupOpcode(hex string) (Opcode, error) {
 	opcodeByte := byte(parsed)
 	opcode, exists := Opcodes[opcodeByte]
 	if !exists {
-		return nil, fmt.Errorf("unsupported opcode 0x%02X", opcodeByte)
+		return nil, NewUnsupportedOpcodeError(opcodeByte)
 	}
 	return opcode, nil
 }
