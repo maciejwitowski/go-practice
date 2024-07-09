@@ -1,11 +1,15 @@
 package cache
 
-import "errors"
+import (
+	"errors"
+	"sync"
+)
 
 type FIFOCache struct {
 	items   map[string]interface{}
-	queue   Queue
+	queue   *Queue
 	MaxSize int
+	mu      sync.RWMutex
 }
 
 func NewFIFOCache(maxSize int) (*FIFOCache, error) {
@@ -21,6 +25,9 @@ func NewFIFOCache(maxSize int) (*FIFOCache, error) {
 }
 
 func (c *FIFOCache) Read(key string) (interface{}, bool) {
+	c.mu.RLock()
+	defer c.mu.RUnlock()
+
 	val, ok := c.items[key]
 	return val, ok
 }
@@ -28,6 +35,9 @@ func (c *FIFOCache) Read(key string) (interface{}, bool) {
 // Write adds or updates a value in the cache
 // It returns true if the value was added, false if it was updated
 func (c *FIFOCache) Write(key string, val interface{}) bool {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+
 	if _, exists := c.items[key]; exists {
 		c.items[key] = val
 		return false

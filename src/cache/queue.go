@@ -28,8 +28,8 @@ func (q *Queue) add(next string) {
 	}
 }
 
-func EmptyQueue() Queue {
-	return Queue{
+func EmptyQueue() *Queue {
+	return &Queue{
 		head: nil,
 		tail: nil,
 	}
