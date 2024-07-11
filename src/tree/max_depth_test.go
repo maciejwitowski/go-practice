@@ -52,3 +52,18 @@ func TestIsBalanced(t *testing.T) {
 		t.Errorf("Expected a balanced tree")
 	}
 }
+
+func TestIsSameTree(t *testing.T) {
+	first := setupTest()
+	second := setupTest()
+
+	if !isSameTree(first, second) {
+		t.Errorf("expected trees to be identical")
+	}
+
+	first = BuildTree([]int{1, 2, 1})
+	second = BuildTree([]int{1, 1, 2})
+	if isSameTree(first, second) {
+		t.Errorf("expected trees to be different")
+	}
+}
