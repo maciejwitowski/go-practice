@@ -26,22 +26,29 @@ func TestBuildsTree(t *testing.T) {
 
 func TestMaximumDepth(t *testing.T) {
 	tree := setupTest()
-	depth := maxDepth(tree)
+	depth := MaxDepth(tree)
 	if depth != 3 {
 		t.Errorf("Expected 3, got %d", depth)
 	}
 
 	// Empty tree
 	tree = BuildTree([]int{})
-	depth = maxDepth(tree)
+	depth = MaxDepth(tree)
 	if depth != 0 {
 		t.Errorf("Expected 0, got %d", depth)
 	}
 
 	// Empty tree
 	tree = setupTest()
-	depth = maxDepth(tree)
+	depth = MaxDepth(tree)
 	if depth != 3 {
 		t.Errorf("Expected 3, got %d", depth)
+	}
+}
+
+func TestIsBalanced(t *testing.T) {
+	tree := setupTest()
+	if !IsBalanced(tree) {
+		t.Errorf("Expected a balanced tree")
 	}
 }

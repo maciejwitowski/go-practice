@@ -49,12 +49,45 @@ func BuildTree(nums []int) *Node {
 }
 
 // Calculate max depth of a tree
-func maxDepth(root *Node) int {
+func MaxDepth(root *Node) int {
 	if root == nil {
 		return 0
 	}
 
-	leftDepth := maxDepth(root.Left)
-	rightDepth := maxDepth(root.Right)
+	leftDepth := MaxDepth(root.Left)
+	rightDepth := MaxDepth(root.Right)
 	return 1 + max(leftDepth, rightDepth)
+}
+
+func IsBalanced(root *Node) bool {
+	return getMeta(root).isBalanced
+}
+
+type Metadata struct {
+	depth      int
+	isBalanced bool
+}
+
+func getMeta(root *Node) Metadata {
+	if root == nil {
+		return Metadata{depth: 0, isBalanced: true}
+	}
+
+	leftMeta := getMeta(root.Left)
+	rightMeta := getMeta(root.Right)
+
+	depth := max(leftMeta.depth, rightMeta.depth) + 1
+	isBalanced := leftMeta.isBalanced && rightMeta.isBalanced && diff(leftMeta.depth, rightMeta.depth) <= 1
+
+	return Metadata{
+		depth:      depth,
+		isBalanced: isBalanced,
+	}
+}
+
+func diff(a, b int) int {
+	if a < b {
+		return b - a
+	}
+	return a - b
 }
