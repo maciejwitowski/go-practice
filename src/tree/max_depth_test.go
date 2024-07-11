@@ -67,3 +67,14 @@ func TestIsSameTree(t *testing.T) {
 		t.Errorf("expected trees to be different")
 	}
 }
+
+func TestInvertTree(t *testing.T) {
+	original := BuildTree([]int{1, 2, 3})
+	leftBefore := original.Left.Val
+	inverted := invertTree(original)
+	rightAfter := inverted.Right.Val
+
+	if leftBefore != rightAfter {
+		t.Errorf("Incorrectly inverted")
+	}
+}

@@ -99,3 +99,14 @@ func isSameTree(p *Node, q *Node) bool {
 	}
 	return isSameTree(p.Left, q.Left) && isSameTree(p.Right, q.Right)
 }
+
+func invertTree(root *Node) *Node {
+	if root == nil {
+		return root
+	}
+
+	temp := root.Right
+	root.Right = invertTree(root.Left)
+	root.Left = invertTree(temp)
+	return root
+}
