@@ -110,3 +110,55 @@ func invertTree(root *Node) *Node {
 	root.Left = invertTree(temp)
 	return root
 }
+
+const (
+	InOrder = iota
+	PreOrder
+	PostOrder
+)
+
+func traversal(root *Node, technique int) []int {
+	var result []int
+	switch technique {
+	case InOrder:
+		inOrderTraversal(root, &result)
+	case PreOrder:
+		preOrderTraversal(root, &result)
+	case PostOrder:
+		postOrderTraversal(root, &result)
+	}
+	return result
+}
+
+// left -> root -> right
+func inOrderTraversal(root *Node, result *[]int) {
+	if root == nil {
+		return
+	}
+
+	inOrderTraversal(root.Left, result)
+	*result = append(*result, root.Val)
+	inOrderTraversal(root.Right, result)
+}
+
+// left -> right -> root
+func postOrderTraversal(root *Node, result *[]int) {
+	if root == nil {
+		return
+	}
+
+	postOrderTraversal(root.Left, result)
+	postOrderTraversal(root.Right, result)
+	*result = append(*result, root.Val)
+}
+
+// root -> left -> right
+func preOrderTraversal(root *Node, result *[]int) {
+	if root == nil {
+		return
+	}
+
+	*result = append(*result, root.Val)
+	preOrderTraversal(root.Left, result)
+	preOrderTraversal(root.Right, result)
+}

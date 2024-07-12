@@ -1,6 +1,7 @@
 package tree
 
 import (
+	"slices"
 	"testing"
 )
 
@@ -21,6 +22,41 @@ func TestBuildsTree(t *testing.T) {
 
 	if tree.Right.Left.Val != 15 {
 		t.Errorf("Expected 15, got %d", tree.Right.Left.Val)
+	}
+}
+
+var traversedTree = &Node{
+	Val: 1,
+	Left: &Node{
+		Val:   2,
+		Left:  &Node{Val: 4},
+		Right: &Node{Val: 5},
+	},
+	Right: &Node{
+		Val:   3,
+		Left:  &Node{Val: 6},
+		Right: &Node{Val: 7},
+	},
+}
+
+func TestInOrderTraversal(t *testing.T) {
+	result := traversal(traversedTree, InOrder)
+	if !slices.Equal(result, []int{4, 2, 5, 1, 6, 3, 7}) {
+		t.Errorf("incorrect traversal")
+	}
+}
+
+func TestPreOrderTraversal(t *testing.T) {
+	result := traversal(traversedTree, PreOrder)
+	if !slices.Equal(result, []int{1, 2, 4, 5, 3, 6, 7}) {
+		t.Errorf("incorrect traversal")
+	}
+}
+
+func TestPostOrderTraversal(t *testing.T) {
+	result := traversal(traversedTree, PostOrder)
+	if !slices.Equal(result, []int{4, 5, 2, 6, 7, 3, 1}) {
+		t.Errorf("incorrect traversal")
 	}
 }
 
