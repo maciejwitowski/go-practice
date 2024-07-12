@@ -115,6 +115,7 @@ const (
 	InOrder = iota
 	PreOrder
 	PostOrder
+	LevelOrder
 )
 
 func traversal(root *Node, technique int) []int {
@@ -126,6 +127,8 @@ func traversal(root *Node, technique int) []int {
 		preOrderTraversal(root, &result)
 	case PostOrder:
 		postOrderTraversal(root, &result)
+	case LevelOrder:
+		levelOrderTraversal(root, &result)
 	}
 	return result
 }
@@ -161,4 +164,24 @@ func preOrderTraversal(root *Node, result *[]int) {
 	*result = append(*result, root.Val)
 	preOrderTraversal(root.Left, result)
 	preOrderTraversal(root.Right, result)
+}
+
+func levelOrderTraversal(root *Node, result *[]int) {
+	if root == nil {
+		return
+	}
+
+	queue := []*Node{root}
+	for len(queue) > 0 {
+		node := queue[0]
+		queue = queue[1:]
+		*result = append(*result, node.Val)
+
+		if node.Left != nil {
+			queue = append(queue, node.Left)
+		}
+		if node.Right != nil {
+			queue = append(queue, node.Right)
+		}
+	}
 }

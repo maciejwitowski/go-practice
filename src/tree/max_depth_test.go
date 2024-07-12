@@ -60,6 +60,13 @@ func TestPostOrderTraversal(t *testing.T) {
 	}
 }
 
+func TestLevelOrderTraversal(t *testing.T) {
+	result := traversal(traversedTree, LevelOrder)
+	if !slices.Equal(result, []int{1, 2, 3, 4, 5, 6, 7}) {
+		t.Errorf("incorrect traversal")
+	}
+}
+
 func TestMaximumDepth(t *testing.T) {
 	tree := setupTest()
 	depth := MaxDepth(tree)
