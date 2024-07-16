@@ -121,3 +121,22 @@ func TestInvertTree(t *testing.T) {
 		t.Errorf("Incorrectly inverted")
 	}
 }
+
+func TestIsSymmetric(t *testing.T) {
+	var tree *Node
+	tree = BuildTree([]int{1})
+	if !isSymmetric(tree) {
+		t.Errorf("should be symmetric")
+	}
+
+	tree = BuildTree([]int{1, 2, 2, 3, 4, 4, 3})
+
+	if !isSymmetricRec(tree) {
+		t.Errorf("should be symmetric")
+	}
+
+	tree = BuildTree([]int{1, 2, 2, -1, 3, -1, 3})
+	if isSymmetric(tree) {
+		t.Errorf("shouldn't be symmetric")
+	}
+}

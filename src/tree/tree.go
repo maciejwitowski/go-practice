@@ -185,3 +185,47 @@ func levelOrderTraversal(root *Node, result *[]int) {
 		}
 	}
 }
+
+func isSymmetric(root *Node) bool {
+	if root == nil {
+		return true
+	}
+
+	queue := []*Node{root.Left, root.Right}
+
+	for len(queue) > 0 {
+		left, right := queue[0], queue[1]
+		queue = queue[2:]
+
+		if left == nil && right == nil {
+			continue
+		}
+
+		if left == nil || right == nil || left.Val != right.Val {
+			return false
+		}
+
+		queue = append(queue, left.Left, right.Right, left.Right, right.Left)
+	}
+
+	return true
+}
+
+func isSymmetricRec(root *Node) bool {
+	if root == nil {
+		return true
+	}
+	return isMirror(root.Left, root.Right)
+}
+
+func isMirror(left, right *Node) bool {
+	if left == nil && right == nil {
+		return true
+	}
+	if left == nil || right == nil {
+		return false
+	}
+	return left.Val == right.Val &&
+		isMirror(left.Left, right.Right) &&
+		isMirror(left.Right, right.Left)
+}
