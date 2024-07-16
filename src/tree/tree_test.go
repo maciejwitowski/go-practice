@@ -140,3 +140,23 @@ func TestIsSymmetric(t *testing.T) {
 		t.Errorf("shouldn't be symmetric")
 	}
 }
+
+func TestAverageOfLevels(t *testing.T) {
+	var tree *Node
+
+	tree = BuildTree([]int{1, 2, 2})
+	if !slices.Equal(averageOfLevels(tree), []float64{1, 2}) {
+		t.Errorf("should be symmetric")
+	}
+
+	tree = BuildTree([]int{1, 2, 2, 3, 4, 4, 3})
+	result := averageOfLevels(tree)
+	if !slices.Equal(result, []float64{1, 2, 3.5}) {
+		t.Errorf("incorrect averages")
+	}
+
+	tree = BuildTree([]int{3, 9, 20, -1, -1, 15, 7})
+	if !slices.Equal(averageOfLevels(tree), []float64{3, 14.5, 11}) {
+		t.Errorf("incorrect averages")
+	}
+}
