@@ -6,7 +6,7 @@ import (
 )
 
 func TestTokenBucketHappyPath(t *testing.T) {
-	tb := NewTokenBucket(4, 2*time.Millisecond, 2)
+	tb := NewTokenBucket(4, 4, 2*time.Millisecond, 2)
 
 	tb.Start()
 	defer tb.Stop()
@@ -38,7 +38,7 @@ func TestTokenBucketHappyPath(t *testing.T) {
 }
 
 func TestTokenBucketStartAndStop(t *testing.T) {
-	tb := NewTokenBucket(4, 2*time.Millisecond, 2)
+	tb := NewTokenBucket(4, 4, 2*time.Millisecond, 2)
 
 	tb.Start()
 
