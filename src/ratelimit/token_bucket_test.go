@@ -8,8 +8,7 @@ import (
 func TestTokenBucketHappyPath(t *testing.T) {
 	tb := NewTokenBucket(4, 4, 2*time.Millisecond, 2)
 
-	tb.Start()
-	defer tb.Stop()
+	_ = tb.Start()
 
 	for i := 1; i <= 4; i++ {
 		if tb.IsOverflown() {
@@ -35,12 +34,14 @@ func TestTokenBucketHappyPath(t *testing.T) {
 	if !tb.IsOverflown() {
 		t.Errorf("Request should have overflown")
 	}
+
+	_ = tb.Stop()
 }
 
 func TestTokenBucketStartAndStop(t *testing.T) {
 	tb := NewTokenBucket(4, 4, 2*time.Millisecond, 2)
 
-	tb.Start()
+	_ = tb.Start()
 
 	// Use all tokens
 	for i := 1; i <= 4; i++ {
@@ -52,7 +53,7 @@ func TestTokenBucketStartAndStop(t *testing.T) {
 	}
 
 	// Stopped not to refill
-	tb.Stop()
+	_ = tb.Stop()
 
 	// Advance shouldn't have an effect since the times has been stopped
 	time.Sleep(2*time.Millisecond + 1*time.Millisecond)
@@ -61,8 +62,7 @@ func TestTokenBucketStartAndStop(t *testing.T) {
 		t.Errorf("Tokens shouldn't have been refilled becaue it's stopped")
 	}
 
-	tb.Start()
-	defer tb.Stop()
+	_ = tb.Start()
 	if !tb.IsOverflown() {
 		t.Errorf("Tokens shouldn't have been refilled becaue it just started again")
 	}
@@ -80,4 +80,6 @@ func TestTokenBucketStartAndStop(t *testing.T) {
 	if !tb.IsOverflown() {
 		t.Errorf("There should be no tokens")
 	}
+
+	_ = tb.Stop()
 }

@@ -1,6 +1,7 @@
 package ratelimit
 
 import (
+	"errors"
 	"sync"
 	"time"
 )
@@ -13,6 +14,7 @@ type TokenBucket struct {
 	refillDelta     int
 	ticker          *time.Ticker
 	done            chan struct{}
+	started         bool
 }
 
 func NewTokenBucket(availableTokens int, maxTokens int, refillInterval time.Duration, refillDelta int) *TokenBucket {
@@ -28,12 +30,17 @@ func NewTokenBucket(availableTokens int, maxTokens int, refillInterval time.Dura
 	}
 }
 
-func (b *TokenBucket) Start() {
+func (b *TokenBucket) Start() error {
 	b.mu.Lock()
 	defer b.mu.Unlock()
-	
+
+	if b.started {
+		return errors.New("token bucket already started")
+	}
+
 	b.ticker = time.NewTicker(b.refillInterval)
 	b.done = make(chan struct{})
+	b.started = true
 
 	go func() {
 		for {
@@ -45,14 +52,23 @@ func (b *TokenBucket) Start() {
 			}
 		}
 	}()
+
+	return nil
 }
 
-func (b *TokenBucket) Stop() {
+func (b *TokenBucket) Stop() error {
 	b.mu.Lock()
 	defer b.mu.Unlock()
 
+	if !b.started {
+		return errors.New("token bucket already started")
+	}
+
 	b.ticker.Stop()
 	close(b.done)
+	b.started = false
+
+	return nil
 }
 
 func (b *TokenBucket) IsOverflown() bool {
@@ -61,15 +77,15 @@ func (b *TokenBucket) IsOverflown() bool {
 
 	if b.availableTokens == 0 {
 		return true
-	} else {
-		b.availableTokens--
-		return false
 	}
+
+	b.availableTokens--
+	return false
 }
 
 func (b *TokenBucket) refill() {
 	b.mu.Lock()
 	defer b.mu.Unlock()
 
-	b.availableTokens += b.refillDelta
+	b.availableTokens = min(b.availableTokens+b.refillDelta, b.maxTokens)
 }
