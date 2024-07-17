@@ -14,7 +14,7 @@ type TokenBucket struct {
 	refillDelta     int
 	ticker          *time.Ticker
 	done            chan struct{}
-	started         bool
+	Started         bool
 }
 
 func NewTokenBucket(availableTokens int, maxTokens int, refillInterval time.Duration, refillDelta int) *TokenBucket {
@@ -34,13 +34,13 @@ func (b *TokenBucket) Start() error {
 	b.mu.Lock()
 	defer b.mu.Unlock()
 
-	if b.started {
-		return errors.New("token bucket already started")
+	if b.Started {
+		return errors.New("token bucket already Started")
 	}
 
 	b.ticker = time.NewTicker(b.refillInterval)
 	b.done = make(chan struct{})
-	b.started = true
+	b.Started = true
 
 	go func() {
 		for {
@@ -60,13 +60,13 @@ func (b *TokenBucket) Stop() error {
 	b.mu.Lock()
 	defer b.mu.Unlock()
 
-	if !b.started {
-		return errors.New("token bucket already started")
+	if !b.Started {
+		return errors.New("token bucket already Started")
 	}
 
 	b.ticker.Stop()
 	close(b.done)
-	b.started = false
+	b.Started = false
 
 	return nil
 }

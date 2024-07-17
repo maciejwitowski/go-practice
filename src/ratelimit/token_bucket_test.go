@@ -64,7 +64,7 @@ func TestTokenBucketStartAndStop(t *testing.T) {
 
 	_ = tb.Start()
 	if !tb.IsOverflown() {
-		t.Errorf("Tokens shouldn't have been refilled becaue it just started again")
+		t.Errorf("Tokens shouldn't have been refilled becaue it just Started again")
 	}
 
 	// This advance will have an effect
