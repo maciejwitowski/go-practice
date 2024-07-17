@@ -42,7 +42,7 @@ func (rl *RateLimiter) Process(r Request) (ApiResult, error) {
 	}
 
 	if bucket.IsOverflown() {
-		return "", errors.New("too many requests")
+		return "", errors.New("too many RequestsQueue")
 	}
 
 	return rl.api.execute(r)
@@ -64,6 +64,10 @@ type RequestKey string
 type Request struct {
 	UserId    string
 	IpAddress net.IPAddr
+}
+
+func (r Request) String() string {
+	return fmt.Sprintf("Request[UserID=%s]", r.UserId)
 }
 
 type Policy interface {
