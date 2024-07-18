@@ -19,7 +19,6 @@ func NewHashRing(hashFunc func(string) string) *HashRing {
 }
 
 type Server struct {
-	//IP    net.IPAddr
 	ID   string
 	keys []string
 	hash string
@@ -37,7 +36,7 @@ func (hr *HashRing) store(key string) {
 	inserted := false
 
 	for e := hr.Servers.Front(); e != nil; e = e.Next() {
-		server := e.Value.(Server)
+		server := e.Value.(*Server)
 		if key < server.hash {
 			server.keys = append(server.keys, key)
 			inserted = true
@@ -50,23 +49,22 @@ func (hr *HashRing) store(key string) {
 		server := hr.Servers.Back().Value.(Server)
 		server.keys = append(server.keys, key)
 	}
-
-	// calculate hash
-
-	//return Key{hr.hashFunc(val)}
-	// choose server to store
-
-	//keyHash := hr.hashFunc(key)
-
-	//for _, s := range hr.Servers {
-	//
-	//}
-
 }
 
-// func (hr *HashRing) findBy(key Key) Server {
-//
-// }
+func (hr *HashRing) findServerByKey(key string) *Server {
+	for e := hr.Servers.Front(); e != nil; e = e.Next() {
+		server := e.Value.(*Server)
+		if key < server.hash {
+			for _, keyInServer := range server.keys {
+				if key == keyInServer {
+					return server
+				}
+			}
+		}
+	}
+
+	return nil
+}
 
 func (hr *HashRing) addServer(id string) { // ip net.IPAddr) {
 	server := Server{
@@ -76,15 +74,15 @@ func (hr *HashRing) addServer(id string) { // ip net.IPAddr) {
 	}
 
 	if hr.Servers.Len() == 0 {
-		hr.Servers.PushFront(server)
+		hr.Servers.PushFront(&server)
 		return
 	}
 
 	inserted := false
 
 	for e := hr.Servers.Front(); e != nil; e = e.Next() {
-		if server.hash < e.Value.(Server).hash {
-			hr.Servers.InsertBefore(server, e)
+		if server.hash < e.Value.(*Server).hash {
+			hr.Servers.InsertBefore(&server, e)
 			inserted = true
 			break
 		}
@@ -92,17 +90,12 @@ func (hr *HashRing) addServer(id string) { // ip net.IPAddr) {
 
 	// Server with lower hash wasn't found. Add as the last one
 	if !inserted {
-		hr.Servers.InsertAfter(server, hr.Servers.Back())
+		hr.Servers.InsertAfter(&server, hr.Servers.Back())
 	}
 }
 
 func (hr *HashRing) ListServers() {
 	for e := hr.Servers.Front(); e != nil; e = e.Next() {
-		fmt.Println(e.Value.(Server))
+		fmt.Println(e.Value.(*Server))
 	}
 }
-
-//
-//func (hr *HashRing) removeServer() {
-//
-//}
