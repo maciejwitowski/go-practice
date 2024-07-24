@@ -15,11 +15,7 @@ func twoSumSorted(numbers []int, target int) []int {
 	b := len(numbers) - 1
 	result := make([]int, 2)
 
-	for {
-		if a >= b {
-			break
-		}
-
+	for a < b {
 		sum := numbers[a] + numbers[b]
 		if sum > target {
 			b--
